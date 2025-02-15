@@ -613,7 +613,7 @@ class Scanner:
         try:
             self.detect_threshold_z = test_threshold
             # Set the initial position for the toolhead
-            self.toolhead.set_position(initial_position, homing_axes=[2])
+            self.toolhead.set_position(initial_position, homing_axes="z")
 
             retries = 0
 
@@ -1016,7 +1016,7 @@ class Scanner:
         try:
             self.detect_threshold_z = test_threshold
             # Set the initial position for the toolhead
-            self.toolhead.set_position(initial_position, homing_axes=[2])
+            self.toolhead.set_position(initial_position, homing_axes="z")
 
             retries = 0
             new_retry = False
@@ -1229,7 +1229,7 @@ class Scanner:
             move = [None, None, self.z_hop_dist]
             if "z" not in kin_status["homed_axes"]:
                 pos[2] = 0
-                self.toolhead.set_position(pos, homing_axes=[2])
+                self.toolhead.set_position(pos, homing_axes="z")
                 self.toolhead.manual_move(move, self.z_hop_speed)
                 self.toolhead.wait_moves()
                 if hasattr(kin, "note_z_not_homed"):
@@ -1488,7 +1488,7 @@ class Scanner:
             curtime = self.printer.get_reactor().monotonic()
             status = self.toolhead.get_kinematics().get_status(curtime)
             pos[2] = status["axis_maximum"][2]
-            self.toolhead.set_position(pos, homing_axes=(0, 1, 2))
+            self.toolhead.set_position(pos, homing_axes="xyz")
             self.touch_probe(self.probe_speed)
             self.toolhead.set_position(pos)
             self._move([None, None, 0], self.lift_speed)
@@ -1546,7 +1546,7 @@ class Scanner:
                     - 2.0
                     - gcmd.get_float("CEIL", self.cal_config["ceil"])
                 )
-                self.toolhead.set_position(pos, homing_axes=[2])
+                self.toolhead.set_position(pos, homing_axes="z")
                 forced_z = True
             self._move([touch_location_x, touch_location_y, None], 40)
             self.toolhead.wait_moves()
